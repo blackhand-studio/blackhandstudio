@@ -1,0 +1,1153 @@
+<title>Raid to the Dracula Castle</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Doces ou travessuras? O Drácula escolheu os doces. Ação isométrica em pixel art da Blackhand Studio, em breve na Steam.">
+<meta name="theme-color" content="#120c1d">
+<link rel="icon" href="img/favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="img/blackhand-icone-180.png">
+<!-- Compartilhamento em redes sociais (Open Graph) e busca. O endereço é o domínio simulado do projeto: troque pelo definitivo ao publicar. -->
+<link rel="canonical" href="https://blackhandstudio.github.io/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Blackhand Studio">
+<meta property="og:title" content="Raid to the Dracula Castle">
+<meta property="og:description" content="Doces ou travessuras? O Drácula escolheu os doces. Ação isométrica em pixel art, em breve na Steam.">
+<meta property="og:url" content="https://blackhandstudio.github.io/">
+<meta property="og:image" content="https://blackhandstudio.github.io/img/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"VideoGame","name":"Raid to the Dracula Castle","description":"Ação isométrica em pixel art: Pumpkinboy invade o castelo do Drácula para recuperar os doces das crianças.","genre":["Ação","Pixel art"],"gamePlatform":"PC","inLanguage":["pt-BR","en"],"url":"https://blackhandstudio.github.io/","image":"https://blackhandstudio.github.io/img/og.png","publisher":{"@type":"Organization","name":"Blackhand Studio","logo":"https://blackhandstudio.github.io/img/blackhand-icone-180.png"}}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;600;700&family=Figtree:wght@400;500;700&display=swap">
+<style>
+/* Layout: noite no castelo. Faixas roxas de ponta a ponta, pixel art sempre em escala inteira,
+   rótulos no estilo do HUD do jogo ("NÍVEL 10/67") e laranja-abóbora só nas ações. Tema único, escuro, de propósito. */
+:root {
+  --night: #120c1d;      /* fundo: a mesma cor do contorno dos textos do jogo */
+  --dusk: #1b1430;       /* faixas e painéis */
+  --plum: #2c2049;       /* bordas e superfícies elevadas */
+  --fog: #b6abd2;        /* texto secundário */
+  --moon: #fff2dc;       /* texto principal */
+  --pumpkin: #ff9a2e;    /* ações */
+  --pumpkin-ink: #2a1300;
+  --blood: #e04a58;      /* Drácula, chefes */
+  --pumpkin-deep: #b4600f;  /* sombra do botão principal */
+  --crimson: #3a1020;    /* luz vermelha atrás das silhuetas */
+  --glow-edge: #8a2a3a;
+  --glow: rgba(224, 74, 88, .45);
+  --sky: #1a1033;        /* topo do céu do herói */
+  --line: var(--plum);   /* bordas */
+  --r-sm: 4px; --r: 6px;
+  --tap: 44px;           /* área mínima de toque */
+  --font-pixel: 'Pixelify Sans', 'Courier New', monospace;
+  --font-body: 'Figtree', 'Segoe UI', system-ui, sans-serif;
+  --step--1: 0.875rem; --step-0: 1rem; --step-1: 1.25rem; --step-2: 1.6rem; --step-3: 2.2rem;
+  --wrap: 1120px;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation: none !important; transition: none !important; } }
+body {
+  margin: 0; background: var(--night); color: var(--moon);
+  font: 400 var(--step-0)/1.6 var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 30; background: var(--night); }
+img.px, .px img { image-rendering: pixelated; image-rendering: crisp-edges; }
+.no-scroll { overflow: hidden; }
+[data-focus]:focus:not(:focus-visible) { outline: none; }
+.skip { position: absolute; left: max(16px, env(safe-area-inset-left, 0px)); top: -100px; z-index: 50; background: var(--pumpkin); color: var(--pumpkin-ink); font: 600 1rem var(--font-pixel); padding: .7rem 1rem; border-radius: var(--r-sm); text-decoration: none; }
+.skip:focus { top: calc(env(safe-area-inset-top, 0px) + 8px); }
+.glow { filter: drop-shadow(0 0 1px var(--glow-edge)) drop-shadow(0 0 10px var(--glow)); }
+a { color: var(--pumpkin); }
+a:hover { color: var(--moon); }
+:focus-visible { outline: 3px solid var(--pumpkin); outline-offset: 3px; }
+h1, h2, h3 { font-family: var(--font-pixel); font-weight: 600; line-height: 1.15; text-wrap: balance; margin: 0; letter-spacing: .01em; }
+h2 { font-size: var(--step-3); }
+h3 { font-size: var(--step-1); }
+p { margin: 0; }
+.wrap { max-width: var(--wrap); margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.band { padding-block: clamp(3rem, 7vw, 5.5rem); }
+.band.dusk { background: var(--dusk); }
+.stack { display: grid; gap: 1rem; }
+.lede { font-size: var(--step-1); color: var(--fog); max-width: 62ch; }
+.muted { color: var(--fog); }
+.hud {
+  font-family: var(--font-pixel); font-weight: 600; text-transform: uppercase; letter-spacing: .08em;
+  font-size: var(--step--1); color: var(--pumpkin);
+}
+.hud.blood { color: var(--blood); }
+.sec-head { display: grid; gap: .6rem; margin-bottom: 2.2rem; max-width: 70ch; }
+
+/* ---------- topo ---------- */
+.top {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20;
+  background: color-mix(in srgb, var(--night) 92%, transparent);
+  backdrop-filter: blur(6px); border-bottom: 1px solid var(--plum);
+}
+.top .wrap { display: flex; align-items: center; gap: 1rem; min-height: 64px; }
+.brand { display: flex; align-items: center; gap: .6rem; text-decoration: none; color: var(--moon); margin-right: auto; }
+.brand img { width: 188px; max-width: 46vw; height: auto; display: block; }
+.nav { display: flex; gap: .2rem; list-style: none; margin: 0; padding: 0; }
+.nav a {
+  display: block; padding: .5rem .75rem; border-radius: 6px; text-decoration: none; color: var(--fog);
+  font-family: var(--font-pixel); font-size: 1rem;
+}
+.nav a:hover { color: var(--moon); background: var(--plum); }
+.nav a[aria-current="page"] { color: var(--moon); box-shadow: inset 0 -3px 0 var(--pumpkin); border-radius: 6px 6px 0 0; }
+.lang {
+  display: flex; border: 1px solid var(--plum); border-radius: 6px; overflow: hidden; flex: none;
+}
+.lang button {
+  background: none; border: 0; color: var(--fog); font: 600 .9rem var(--font-pixel); padding: 0 .7rem; min-height: var(--tap); min-width: var(--tap); cursor: pointer;
+}
+.lang button[aria-pressed="true"] { background: var(--plum); color: var(--moon); }
+.menu-btn {
+  display: none; background: none; border: 1px solid var(--plum); color: var(--moon); border-radius: 6px;
+  font: 600 1rem var(--font-pixel); padding: 0 .8rem; min-height: var(--tap); cursor: pointer;
+}
+@media (max-width: 860px) {
+  .menu-btn { display: block; }
+  .nav {
+    position: absolute; left: 0; right: 0; top: 100%; flex-direction: column; gap: 0;
+    background: var(--night); border-bottom: 1px solid var(--plum);
+    padding: .5rem max(16px, env(safe-area-inset-right, 0px)) 1rem max(16px, env(safe-area-inset-left, 0px));
+  }
+  .nav:not(.open) { display: none; }
+  .nav a { padding: .8rem .5rem; font-size: 1.15rem; }
+  .nav a[aria-current="page"] { box-shadow: inset 3px 0 0 var(--pumpkin); border-radius: 0; padding-left: .9rem; }
+}
+
+/* ---------- botões ---------- */
+.btns { display: flex; flex-wrap: wrap; gap: .8rem; align-items: center; }
+.btn {
+  display: inline-flex; align-items: center; gap: .55rem; text-decoration: none; cursor: pointer;
+  font: 600 1.05rem var(--font-pixel); padding: .8rem 1.2rem; border-radius: 4px; border: 2px solid transparent;
+  transition: transform .12s ease;
+}
+.btn:hover { transform: translateY(-2px); }
+.btn.main { background: var(--pumpkin); color: var(--pumpkin-ink); box-shadow: 0 4px 0 var(--pumpkin-deep); }
+.btn.main:hover { color: var(--pumpkin-ink); }
+.btn.ghost { border-color: var(--plum); color: var(--moon); background: var(--dusk); }
+.btn.ghost:hover { border-color: var(--pumpkin); color: var(--moon); }
+.btn:disabled { opacity: .6; cursor: progress; transform: none; }
+/* selo de estado: não é botão, não parece botão */
+.badge { display: inline-flex; align-items: center; gap: .5rem; font: 600 .85rem var(--font-pixel); letter-spacing: .08em; text-transform: uppercase; color: var(--fog); }
+.badge::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--pumpkin); box-shadow: 0 0 0 4px rgba(255, 154, 46, .18); }
+
+
+/* início: herói */
+.hero {
+  background:
+    radial-gradient(1.5px 1.5px at 12% 22%, var(--moon) 50%, transparent 51%),
+    radial-gradient(1px 1px at 28% 64%, var(--fog) 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 44% 12%, var(--moon) 50%, transparent 51%),
+    radial-gradient(1px 1px at 8% 80%, var(--fog) 50%, transparent 51%),
+    radial-gradient(1px 1px at 36% 38%, var(--moon) 50%, transparent 51%),
+    linear-gradient(180deg, var(--sky) 0%, var(--night) 100%);
+}
+.hero .wrap { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 640px); gap: clamp(1.5rem, 4vw, 3.5rem); align-items: center; padding-block: clamp(2rem, 5vw, 4rem); }
+.hero-copy { display: grid; gap: 1.4rem; min-width: 0; }
+.logo { display: grid; gap: .35rem; justify-items: start; }
+.logo .raid { font: 700 clamp(1.1rem, 2.4vw, 1.6rem) var(--font-pixel); letter-spacing: .3em; color: var(--fog); text-transform: uppercase; }
+.logo .drac { width: min(100%, 564px); height: auto; display: block; }
+.logo .castle { width: min(56%, 252px); height: auto; display: block; margin-top: .3rem; }
+.hero .lede { color: var(--moon); }
+.hero-art { margin: 0; position: relative; }
+.hero-art img { width: 100%; max-width: 640px; height: auto; display: block; border: 4px solid var(--plum); border-radius: 4px; }
+.hero-art figcaption { position: absolute; left: 12px; bottom: 12px; }
+.chip {
+  display: inline-block; background: var(--night); border: 1px solid var(--plum); color: var(--moon);
+  font: 600 .78rem var(--font-pixel); letter-spacing: .08em; text-transform: uppercase; padding: .3rem .55rem; border-radius: 3px;
+}
+@media (max-width: 860px) { .hero .wrap { grid-template-columns: 1fr; } }
+
+/* faixa de números do jogo */
+.facts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1px; background: var(--plum); border: 1px solid var(--plum); border-radius: 6px; overflow: hidden; }
+.facts div { background: var(--dusk); padding: 1.2rem 1.1rem; display: grid; gap: .25rem; }
+.facts b { font: 700 var(--step-3) var(--font-pixel); color: var(--moon); font-variant-numeric: tabular-nums; }
+.facts span { color: var(--fog); font-size: var(--step--1); }
+@media (max-width: 700px) { .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* gancho do herói */
+.eyebrow { font: 600 var(--step--1) var(--font-pixel); letter-spacing: .14em; text-transform: uppercase; color: var(--blood); }
+.hook { font: 600 clamp(1.35rem, 2.6vw, 1.9rem) var(--font-pixel); line-height: 1.2; color: var(--pumpkin); text-wrap: balance; }
+
+/* recursos: linhas com imagem */
+.feat { display: grid; gap: clamp(2.5rem, 6vw, 4.5rem); }
+.feat-row { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: clamp(1.25rem, 4vw, 3rem); align-items: center; }
+.feat-row:nth-child(even) .shot { order: 2; }
+.feat-row .txt { display: grid; gap: .8rem; min-width: 0; }
+.feat-row .txt p { color: var(--fog); max-width: 52ch; }
+.shot { margin: 0; border: 4px solid var(--plum); border-radius: 4px; background: var(--night); overflow: hidden; }
+.shot img { width: 100%; height: auto; display: block; aspect-ratio: 16 / 10; }
+@media (max-width: 760px) { .feat-row { grid-template-columns: 1fr; } .feat-row:nth-child(even) .shot { order: 0; } }
+
+/* chefes: só as silhuetas */
+.shadows { background: radial-gradient(ellipse at 50% 100%, var(--crimson) 0%, var(--dusk) 60%); }
+.sils { display: flex; flex-wrap: wrap; justify-content: center; align-items: end; gap: clamp(1.25rem, 4vw, 3rem); padding-top: 1rem; }
+.sils img { height: auto; max-width: 100%; }
+
+/* plataformas */
+.plats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; list-style: none; padding: 0; margin: 0; }
+.plats li { border: 1px solid var(--plum); border-radius: 6px; padding: 1.1rem; display: grid; gap: .4rem; align-content: start; }
+.plats b { font-family: var(--font-pixel); font-size: var(--step-1); font-weight: 600; }
+.plats p { color: var(--fog); font-size: var(--step--1); }
+@media (max-width: 860px) { .plats { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 460px) { .plats { grid-template-columns: 1fr; } }
+
+/* chamada final com a rua da abertura */
+.cta-band { background: var(--night); border-top: 1px solid var(--plum); }
+.cta-band .wrap { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 2rem; align-items: center; padding-block: clamp(2.5rem, 6vw, 4rem); }
+.cta-band img { width: 100%; height: auto; display: block; border: 4px solid var(--plum); border-radius: 4px; }
+@media (max-width: 760px) { .cta-band .wrap { grid-template-columns: 1fr; } }
+
+/* o jogo */
+.how { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+.how > div { border: 1px solid var(--plum); border-radius: 6px; padding: 1.2rem; display: grid; gap: .6rem; align-content: start; background: var(--dusk); }
+.how p { color: var(--fog); }
+@media (max-width: 760px) { .how { grid-template-columns: 1fr; } }
+.cast { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+.cast > div { display: grid; gap: .7rem; align-content: start; }
+.cast .art { background: var(--dusk); border: 1px solid var(--plum); border-radius: 6px; display: flex; justify-content: center; align-items: end; padding-top: 1rem; min-height: 170px; overflow: hidden; }
+.cast .art.dark { background: radial-gradient(circle at 50% 80%, var(--crimson) 0%, var(--night) 70%); }
+.cast .art img { max-width: 100%; height: auto; }
+.cast p { color: var(--fog); }
+@media (max-width: 760px) { .cast { grid-template-columns: 1fr; } }
+
+/* imagens */
+.gallery { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; list-style: none; margin: 0; padding: 0; }
+.gallery button { all: unset; cursor: zoom-in; display: grid; gap: .5rem; width: 100%; }
+.gallery button:focus-visible { outline: 3px solid var(--pumpkin); outline-offset: 3px; }
+.gallery img { width: 100%; height: auto; aspect-ratio: 16 / 10; display: block; border: 3px solid var(--plum); border-radius: 4px; transition: border-color .15s; }
+.gallery button:hover img { border-color: var(--pumpkin); }
+.gallery .cap { display: flex; justify-content: space-between; gap: .5rem; font-size: var(--step--1); color: var(--fog); }
+.gallery .cap b { color: var(--moon); font-weight: 500; }
+@media (max-width: 860px) { .gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 520px) { .gallery { grid-template-columns: 1fr; } }
+.lightbox { position: fixed; inset: 0; z-index: 40; background: rgba(8, 5, 14, .94); display: grid; place-items: center; padding: max(16px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) max(16px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); }
+.lightbox figure { margin: 0; display: grid; gap: .8rem; width: min(100%, 1100px); }
+.lightbox img { width: 100%; height: auto; max-height: 78vh; object-fit: contain; image-rendering: pixelated; }
+.lightbox figcaption { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; align-items: center; color: var(--fog); }
+.lightbox .ctl { display: flex; gap: .5rem; }
+.lightbox button { background: var(--dusk); color: var(--moon); border: 1px solid var(--line); border-radius: var(--r-sm); font: 600 1rem var(--font-pixel); padding: 0 1rem; min-height: var(--tap); min-width: var(--tap); cursor: pointer; }
+.lightbox img { touch-action: pan-y; user-select: none; }
+.lightbox button:hover { border-color: var(--pumpkin); }
+
+
+/* imprensa */
+.press { display: grid; grid-template-columns: minmax(0, 340px) minmax(0, 1fr); gap: clamp(1.5rem, 4vw, 3rem); align-items: start; }
+.sheet { border: 1px solid var(--plum); border-radius: 6px; overflow: hidden; }
+.sheet dl { margin: 0; display: grid; }
+.sheet div { display: grid; gap: .15rem; padding: .85rem 1rem; border-bottom: 1px solid var(--plum); background: var(--dusk); }
+.sheet div:last-child { border-bottom: 0; }
+.sheet dt { font: 600 .78rem var(--font-pixel); letter-spacing: .08em; text-transform: uppercase; color: var(--pumpkin); }
+.sheet dd { margin: 0; }
+.press-body { display: grid; gap: 2rem; min-width: 0; }
+.press-body ul { margin: 0; padding-left: 1.2rem; color: var(--fog); display: grid; gap: .4rem; }
+.logos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+.logos figure { margin: 0; display: grid; gap: .5rem; }
+.logos .box { background: var(--night); border: 1px solid var(--plum); border-radius: 6px; display: grid; place-items: center; padding: 1.5rem 1rem; min-height: 120px; }
+.logos .box.light { background: var(--moon); }
+.logos .box img { width: min(100%, 376px); max-width: 100%; height: auto; }
+.logos figcaption { color: var(--fog); font-size: var(--step--1); }
+@media (max-width: 860px) { .press { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 520px) { .logos { grid-template-columns: minmax(0, 1fr); } }
+
+/* perguntas */
+.faq { display: grid; gap: .6rem; max-width: 820px; }
+.faq details { border: 1px solid var(--plum); border-radius: 6px; background: var(--dusk); }
+.faq summary { cursor: pointer; padding: 1rem 1.2rem; font: 600 var(--step-1) var(--font-pixel); list-style: none; display: flex; justify-content: space-between; gap: 1rem; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: "+"; color: var(--pumpkin); flex: none; }
+.faq details[open] summary::after { content: "–"; }
+.faq details p { padding: 0 1.2rem 1.2rem; color: var(--fog); max-width: 66ch; }
+
+/* contato */
+.contact { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: clamp(1.5rem, 4vw, 3rem); align-items: start; }
+.reasons { display: grid; gap: .8rem; align-content: start; min-width: 0; }
+.reasons h3 { font-size: var(--step-1); margin-bottom: .2rem; }
+.reason {
+  display: grid; gap: .3rem; text-align: left; cursor: pointer; width: 100%; min-height: var(--tap);
+  background: var(--dusk); color: var(--moon); border: 1px solid var(--line); border-radius: var(--r); padding: 1rem 1.1rem;
+  font: inherit; transition: border-color .15s, transform .12s;
+}
+.reason:hover { border-color: var(--pumpkin); transform: translateY(-2px); }
+.reason[aria-pressed="true"] { border-color: var(--pumpkin); box-shadow: inset 3px 0 0 var(--pumpkin); }
+.reason b { font: 600 1.05rem var(--font-pixel); }
+.reason span { color: var(--fog); font-size: var(--step--1); line-height: 1.45; }
+.reasons .soon-note { color: var(--fog); font-size: var(--step--1); }
+.form-card { background: var(--dusk); border: 1px solid var(--line); border-radius: var(--r); padding: clamp(1.1rem, 3vw, 1.6rem); display: grid; gap: 1rem; min-width: 0; }
+.form-card h3 { font-size: var(--step-1); }
+.form-foot { display: flex; flex-wrap: wrap; gap: .6rem 1rem; align-items: center; justify-content: space-between; }
+.form-foot small { color: var(--fog); font-size: .8rem; }
+.count { color: var(--fog); font: 400 .8rem var(--font-body); font-variant-numeric: tabular-nums; justify-self: end; }
+.channels { list-style: none; padding: 0; margin: 0; border-top: 1px solid var(--plum); }
+.channels li { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: .95rem 0; border-bottom: 1px solid var(--plum); flex-wrap: wrap; }
+.channels b { font-family: var(--font-pixel); font-weight: 600; font-size: var(--step-1); }
+.channels a { word-break: break-all; }
+/* aviso: estado vazio, mensagem enviada ou erro */
+.notice { border: 1px solid var(--line); background: var(--dusk); border-radius: var(--r); padding: 1.2rem; display: grid; gap: .6rem; max-width: 640px; }
+.notice.ok { border-color: var(--pumpkin); }
+.notice p { color: var(--fog); }
+.notice .mail { font-family: var(--font-pixel); color: var(--moon); background: var(--night); padding: .2rem .45rem; border-radius: 3px; word-break: break-all; justify-self: start; }
+form.msg { display: grid; gap: .9rem; }
+form.msg label { display: grid; gap: .35rem; font: 600 .9rem var(--font-pixel); letter-spacing: .04em; }
+form.msg input, form.msg textarea, form.msg select {
+  font: 400 1rem var(--font-body); color: var(--moon); background: var(--night); border: 1px solid var(--plum); border-radius: 4px; padding: .7rem .8rem; width: 100%;
+}
+form.msg input:focus, form.msg textarea:focus, form.msg select:focus { outline: 2px solid var(--pumpkin); outline-offset: 1px; }
+form.msg textarea { min-height: 140px; resize: vertical; }
+form.msg .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+@media (max-width: 760px) { .contact { grid-template-columns: 1fr; } .form-card { order: -1; } }
+
+/* rodapé */
+.foot { border-top: 1px solid var(--plum); background: var(--night); }
+.foot .wrap { display: flex; flex-wrap: wrap; gap: 1rem 2rem; justify-content: space-between; align-items: center; padding-block: 2rem; color: var(--fog); font-size: var(--step--1); padding-bottom: max(2rem, env(safe-area-inset-bottom, 0px)); }
+.foot nav { display: flex; flex-wrap: wrap; gap: .2rem 1rem; }
+.foot nav a { color: var(--fog); text-decoration: none; padding: .5rem 0; display: inline-block; }
+.foot nav a:hover { color: var(--moon); }
+.foot .studio { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1rem; }
+.foot .studio a { display: inline-flex; align-items: center; gap: .6rem; color: var(--fog); text-decoration: none; }
+.foot .studio img { height: 40px; width: auto; display: block; }
+/* estúdio no kit de imprensa */
+.studio-card { display: grid; grid-template-columns: minmax(0, 200px) minmax(0, 1fr); gap: 1.25rem; align-items: center; }
+.studio-card img { width: 100%; height: auto; display: block; border: 1px solid var(--line); border-radius: var(--r); }
+.studio-card p { color: var(--fog); }
+.logos .box img.brand { width: min(100%, 376px); height: auto; }
+@media (max-width: 520px) { .studio-card { grid-template-columns: minmax(0, 1fr); } .studio-card img { max-width: 240px; } }
+</style>
+
+<a class="skip" href="#main" data-skip data-t="skip">Pular para o conteúdo</a>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#inicio" aria-label="Raid to the Dracula Castle: início" data-t-aria="brand">
+      <img class="px" src="img/logo_drac.png" alt="" width="188" height="50">
+    </a>
+    <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="nav" data-t="menu">Menu</button>
+    <ul class="nav" id="nav">
+      <li><a href="#inicio" data-t="nav.inicio">Início</a></li>
+      <li><a href="#jogo" data-t="nav.jogo">O jogo</a></li>
+      <li><a href="#imagens" data-t="nav.imagens">Imagens</a></li>
+      <li><a href="#imprensa" data-t="nav.imprensa">Imprensa</a></li>
+      <li><a href="#perguntas" data-t="nav.perguntas">Perguntas</a></li>
+      <li><a href="#contato" data-t="nav.contato">Contato</a></li>
+    </ul>
+    <div class="lang" role="group" aria-label="Idioma / Language">
+      <button type="button" data-lang="pt" aria-pressed="true" lang="pt-BR" aria-label="Português">PT</button>
+      <button type="button" data-lang="en" aria-pressed="false" lang="en" aria-label="English">EN</button>
+    </div>
+  </div>
+</header>
+
+<main id="main" tabindex="-1">
+<!-- ======================= INÍCIO ======================= -->
+<section class="page" id="p-inicio" data-page="inicio">
+  <div class="hero">
+    <div class="wrap">
+      <div class="hero-copy">
+        <span class="eyebrow" data-t="hero.eye">31 de outubro · meia-noite</span>
+        <h1 class="logo" data-focus tabindex="-1">
+          <span class="raid">Raid to the</span>
+          <img class="drac px" src="img/logo_drac.png" alt="Dracula" width="564" height="150">
+          <img class="castle px" src="img/logo_castle.png" alt="Castle" width="252" height="54">
+        </h1>
+        <p class="hook" data-t="hero.hook">Doces ou travessuras? O Drácula escolheu os doces.</p>
+        <p class="lede" data-t="hero.lede">Ele levou todos os doces da vizinhança para o castelo. Pumpkinboy tem uma abóbora na cabeça, boa pontaria e uma noite inteira para pegar tudo de volta.</p>
+        <div class="btns" data-cta="hero"><a class="btn main" href="#imagens">Ver imagens</a><span class="badge">Em breve na Steam</span></div>
+      </div>
+      <figure class="hero-art">
+        <img class="px" src="img/bg_castle.webp" fetchpriority="high" alt="O castelo do Drácula no alto do morro, com o caminho do cemitério cheio de doces" data-t-alt="hero.alt" width="640" height="616">
+        <figcaption><span class="chip" data-t="hero.chip">Nível 1/67 · Portão do Castelo</span></figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <div class="band">
+    <div class="wrap">
+      <div class="facts">
+        <div><b>67</b><span data-t="facts.salas">salas no castelo</span></div>
+        <div><b>7</b><span data-t="facts.alas">alas, cada uma com a sua música</span></div>
+        <div><b>?</b><span data-t="facts.chefes">chefes esperando lá dentro</span></div>
+        <div><b>1</b><span data-t="facts.abob">abóbora contra o castelo inteiro</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="band">
+    <div class="wrap">
+      <div class="feat">
+        <div class="feat-row">
+          <figure class="shot"><img data-shot="jardim" src="img/pt_jardim.webp" alt="Pumpkinboy no Jardim Abandonado, com doces espalhados pelo chão" data-t-alt="alt.jardim" width="960" height="600" loading="lazy"></figure>
+          <div class="txt">
+            <span class="hud" data-t="f1.hud">Mire, jogue, recolha</span>
+            <h2 data-t="f1.h">Os doces são a sua munição</h2>
+            <p data-t="f1.p">Cada doce jogado sai do seu estoque. O que errar cai no chão, e alguém vai ter que voltar para buscar. Acerte três em sequência e o castelo devolve um pouco do que roubou.</p>
+          </div>
+        </div>
+        <div class="feat-row">
+          <figure class="shot"><img data-shot="labirinto" src="img/pt_labirinto.webp" alt="Pumpkinboy no Labirinto de Cerca-viva, com armadilhas piscando no chão" data-t-alt="alt.labirinto" width="960" height="600" loading="lazy"></figure>
+          <div class="txt">
+            <span class="hud" data-t="f2.hud">O castelo se defende</span>
+            <h2 data-t="f2.h">Nem todo perigo tem dentes</h2>
+            <p data-t="f2.p">O chão pisca antes de morder. Quem presta atenção rola por cima; quem não presta volta para o começo da ala. E na sexta vez, o Drácula vem pessoalmente.</p>
+          </div>
+        </div>
+        <div class="feat-row">
+          <figure class="shot"><img data-shot="cantina" src="img/pt_cantina.webp" alt="A Cantina do Lobisomem, com o Don Lobo atrás do balcão e três itens à venda" data-t-alt="alt.cantina" width="960" height="600" loading="lazy"></figure>
+          <div class="txt">
+            <span class="hud" data-t="f3.hud">Cantina do Lobisomem</span>
+            <h2 data-t="f3.h">Todo castelo tem um traidor</h2>
+            <p data-t="f3.p">No meio de cada ala, um lobisomem mexicano abre a cantina e vende, a preço de doce, coisas que o Drácula não quer que você tenha. Por que ele ajuda? Ele não conta. Ainda.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="band shadows">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="hud blood" data-t="b.hud">Chefes</span>
+        <h2 data-t="b.h">Eles estão esperando</h2>
+        <p class="lede" data-t="b.p">Cada um luta de um jeito e tem a sua própria música. Quem são? Você descobre quando abrir a porta.</p>
+      </div>
+      <div class="sils px" id="bosses" role="img" aria-label="Silhuetas dos seis chefes do jogo" data-t-aria="b.aria"></div>
+    </div>
+  </div>
+
+  <div class="band">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="hud" data-t="plat.hud">Onde jogar</span>
+        <h2 data-t="plat.h">Feito para o PC, pronto para o controle</h2>
+      </div>
+      <ul class="plats">
+        <li><b data-t="plat.pc">PC (Steam)</b><p data-t="plat.pc.p">Windows, com save na nuvem e conquistas. Teclado e mouse, com as teclas que você quiser.</p></li>
+        <li><b>Steam Deck</b><p data-t="plat.deck.p">Controle completo: um analógico anda, o outro mira e joga.</p></li>
+        <li><b data-t="plat.lang">Português e inglês</b><p data-t="plat.lang.p">Textos, falas e menus nos dois idiomas.</p></li>
+        <li><b data-t="plat.mob">Celular</b><p data-t="plat.mob.p">Com controles de toque, depois do lançamento no PC.</p></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="cta-band">
+    <div class="wrap">
+      <img class="px" src="img/bg_street.webp" alt="A rua da vizinhança na noite de Halloween, antes do roubo dos doces" data-t-alt="alt.rua" width="768" height="400" loading="lazy">
+      <div class="stack">
+        <span class="hud" data-t="cta.hud">Steam</span>
+        <h2 data-t="cta.h">A porta do castelo abre no lançamento</h2>
+        <p class="muted" data-cta-text>A página da Steam abre em breve. Quando abrir, coloque o jogo na lista de desejos: para um jogo independente, isso conta muito.</p>
+        <div class="btns" data-cta="end"><a class="btn main" href="#imagens">Ver imagens</a><span class="badge">Em breve na Steam</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= O JOGO ======================= -->
+<section class="page" id="p-jogo" data-page="jogo" hidden>
+  <div class="band">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="hud" data-t="g.hud">A história</span>
+        <h2 data-t="g.h" data-focus tabindex="-1">Uma noite de Halloween sem doces</h2>
+        <p class="lede" data-t="g.p">Na noite de Halloween, o Drácula passou pela vizinhança e levou todos os doces das crianças. Ninguém teve coragem de ir atrás. Ninguém, menos o menino com cabeça de abóbora.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="band dusk">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="hud" data-t="how.hud">Como se joga</span>
+        <h2 data-t="how.h">Três coisas para saber antes de entrar</h2>
+      </div>
+      <div class="how">
+        <div>
+          <h3 data-t="how.1h">Jogar doces</h3>
+          <p data-t="how.1p">Mire e jogue. Os doces que erram ficam no chão: recolha antes de precisar deles.</p>
+        </div>
+        <div>
+          <h3 data-t="how.2h">Rolar</h3>
+          <p data-t="how.2p">Pumpkinboy se encolhe dentro da abóbora e rola: fica mais rápido e, por um instante, nada encosta nele.</p>
+        </div>
+        <div>
+          <h3 data-t="how.3h">Conversar</h3>
+          <p data-t="how.3p">Nem todo mundo no castelo está do lado do Drácula. Vale a pena ouvir.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="band">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="hud" data-t="c.hud">Personagens</span>
+        <h2 data-t="c.h">Os três lados desta noite</h2>
+      </div>
+      <div class="cast px">
+        <div>
+          <div class="art"><img src="img/player.png" alt="Pumpkinboy" data-scale="5"></div>
+          <h3>Pumpkinboy</h3>
+          <p data-t="c.pk">Não tem espada nem magia. Tem pontaria, um estoque de doces e uma abóbora que rola.</p>
+        </div>
+        <div>
+          <div class="art"><img src="img/wolf_a.png" alt="Don Lobo" data-scale="5"></div>
+          <h3>Don Lobo</h3>
+          <p data-t="c.lobo">Lobisomem mexicano, comerciante e inimigo declarado do Drácula. O motivo da briga? Ele muda de assunto toda vez.</p>
+        </div>
+        <div>
+          <div class="art dark"><img class="glow" src="img/sil_7.png" alt="A silhueta do Drácula, com olhos vermelhos" data-t-alt="c.drac.alt" data-scale="3"></div>
+          <h3 data-t="c.drac.h">Drácula</h3>
+          <p data-t="c.drac">Espera no fim do castelo, cercado de doces. Dizem que ele não é mais o mesmo desde aquela noite.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ======================= IMAGENS ======================= -->
+<section class="page" id="p-imagens" data-page="imagens" hidden>
+  <div class="band">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="hud" data-t="i.hud">Imagens do jogo</span>
+        <h2 data-t="i.h" data-focus tabindex="-1">Uma volta pelo castelo</h2>
+        <p class="lede" data-t="i.p">Capturas da versão atual, sem retoque. Clique numa imagem para ver maior.</p>
+      </div>
+      <ul class="gallery" id="gallery"></ul>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= IMPRENSA ======================= -->
+<section class="page" id="p-imprensa" data-page="imprensa" hidden>
+  <div class="band">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="hud" data-t="pr.hud">Kit de imprensa</span>
+        <h2 data-t="pr.h" data-focus tabindex="-1">Para quem vai escrever sobre o jogo</h2>
+      </div>
+      <div class="press">
+        <div class="sheet">
+          <dl>
+            <div><dt data-t="pr.k.title">Título</dt><dd>Raid to the Dracula Castle</dd></div>
+            <div><dt data-t="pr.k.dev">Desenvolvimento</dt><dd data-t="pr.v.dev">Blackhand Studio, estúdio independente (Brasil)</dd></div>
+            <div><dt data-t="pr.k.date">Lançamento</dt><dd data-t="pr.v.date">Em breve</dd></div>
+            <div><dt data-t="pr.k.plat">Plataformas</dt><dd data-t="pr.v.plat">PC (Steam), com suporte ao Steam Deck. Celular depois.</dd></div>
+            <div><dt data-t="pr.k.genre">Gênero</dt><dd data-t="pr.v.genre">Ação isométrica em pixel art, com mira livre</dd></div>
+            <div><dt data-t="pr.k.players">Jogadores</dt><dd data-t="pr.v.players">1</dd></div>
+            <div><dt data-t="pr.k.lang">Idiomas</dt><dd data-t="pr.v.lang">Português (Brasil) e inglês</dd></div>
+            <div><dt data-t="pr.k.price">Preço</dt><dd data-t="pr.v.price">A definir</dd></div>
+            <div><dt data-t="pr.k.ctl">Controles</dt><dd data-t="pr.v.ctl">Teclado e mouse (teclas configuráveis) ou controle</dd></div>
+          </dl>
+        </div>
+        <div class="press-body">
+          <div class="stack">
+            <h3 data-t="pr.short.h">Descrição curta</h3>
+            <p class="muted" data-t="pr.short">O Drácula roubou os doces das crianças. Como Pumpkinboy, invada o castelo dele em 67 salas de ação isométrica em pixel art, com doces no lugar de balas.</p>
+          </div>
+          <div class="stack">
+            <h3 data-t="pr.long.h">Descrição longa</h3>
+            <p class="muted" data-t="pr.long1">Raid to the Dracula Castle é um jogo de ação em pixel art com visão isométrica. Na noite de Halloween, o Drácula leva os doces de toda a vizinhança, e Pumpkinboy, um menino com cabeça de abóbora, invade o castelo para pegá-los de volta.</p>
+            <p class="muted" data-t="pr.long2">Os doces são a munição: o jogador mira, joga e recolhe do chão o que errou. São sete alas, cada uma com um checkpoint, armadilhas e uma cantina onde um lobisomem com motivos próprios vende itens que mudam o jeito de jogar. Cair seis vezes na mesma ala tem consequências.</p>
+          </div>
+          <div class="stack">
+            <h3 data-t="pr.feat.h">Destaques</h3>
+            <ul>
+              <li data-t="pr.f1">67 salas em sete alas, sem mapas repetidos</li>
+              <li data-t="pr.f2">Chefes que lutam cada um do seu jeito</li>
+              <li data-t="pr.f3">Trilha sonora original, com uma música para cada ala e para cada chefe</li>
+              <li data-t="pr.f4">Suporte completo a controle e ao Steam Deck</li>
+              <li data-t="pr.f5">22 conquistas e save na nuvem pela Steam</li>
+              <li data-t="pr.f6">Português e inglês</li>
+            </ul>
+          </div>
+          <div class="stack">
+            <h3 data-t="pr.studio.h">Sobre a Blackhand Studio</h3>
+            <div class="studio-card">
+              <img src="img/blackhand-marca.webp" alt="Marca da Blackhand Studio: uma mão em preto e branco, com o visual de uma gravação em fita VHS" data-t-alt="pr.studio.alt" width="1080" height="1080" loading="lazy">
+              <div class="stack">
+                <p data-t="pr.studio.p1">A Blackhand Studio é um estúdio independente brasileiro de jogos, e Raid to the Dracula Castle é o seu primeiro título.</p>
+                <p data-t="pr.studio.p2">A identidade da marca imita uma gravação em fita VHS: a mão escura que dá nome ao estúdio, o aviso REC e o contador de tempo no canto da tela.</p>
+              </div>
+            </div>
+          </div>
+          <div class="stack">
+            <h3 data-t="pr.logo.h">Logotipos</h3>
+            <div class="logos">
+              <figure><div class="box"><img class="brand" src="img/blackhand-logo-grande.webp" alt="Logotipo da Blackhand Studio sobre fundo escuro" data-t-alt="pr.blogo.dark" width="1669" height="450" loading="lazy"></div><figcaption data-t="pr.blogo.c1">Blackhand Studio, sobre fundo escuro</figcaption></figure>
+              <figure><div class="box light"><img class="brand" src="img/blackhand-logo-grande.webp" alt="Logotipo da Blackhand Studio sobre fundo claro" data-t-alt="pr.blogo.light" width="1669" height="450" loading="lazy"></div><figcaption data-t="pr.blogo.c2">Blackhand Studio, sobre fundo claro</figcaption></figure>
+            </div>
+            <div class="logos px">
+              <figure><div class="box"><img src="img/logo_drac.png" alt="Logotipo Dracula sobre fundo escuro" data-t-alt="pr.logo.dark" data-scale="2"></div><figcaption data-t="pr.logo.c1">Raid to the Dracula Castle, sobre fundo escuro</figcaption></figure>
+              <figure><div class="box light"><img src="img/logo_drac.png" alt="Logotipo Dracula sobre fundo claro" data-t-alt="pr.logo.light" data-scale="2"></div><figcaption data-t="pr.logo.c2">Raid to the Dracula Castle, sobre fundo claro</figcaption></figure>
+            </div>
+            <p class="muted" data-t="pr.more">Imprensa e criadores de conteúdo podem pedir uma chave antecipada e mais material pela página de <a href="#contato">contato</a>. As capturas estão na página de <a href="#imagens">imagens</a>.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= PERGUNTAS ======================= -->
+<section class="page" id="p-perguntas" data-page="perguntas" hidden>
+  <div class="band">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="hud" data-t="q.hud">Perguntas frequentes</span>
+        <h2 data-t="q.h" data-focus tabindex="-1">Antes de entrar no castelo</h2>
+      </div>
+      <div class="faq" id="faq"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= CONTATO ======================= -->
+<section class="page" id="p-contato" data-page="contato" hidden>
+  <div class="band">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="hud" data-t="ct.hud">Contato</span>
+        <h2 data-t="ct.h" data-focus tabindex="-1">Fale com a gente</h2>
+        <p class="lede" data-t="ct.p">Escolha o assunto, escreva sua mensagem e a Blackhand Studio responde pelo e-mail que você deixar.</p>
+      </div>
+      <div id="contactBody"></div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="studio">
+      <a href="#imprensa"><span data-t="foot.by">Um jogo da</span><img src="img/blackhand-logo.webp" alt="Blackhand Studio" width="148" height="40"></a>
+      <span>© 2026 Blackhand Studio · <span data-t="foot.made">Feito no Brasil</span></span>
+    </div>
+    <nav aria-label="Rodapé" data-t-aria="foot.nav">
+      <a href="#inicio" data-t="nav.inicio">Início</a>
+      <a href="#jogo" data-t="nav.jogo">O jogo</a>
+      <a href="#imagens" data-t="nav.imagens">Imagens</a>
+      <a href="#imprensa" data-t="nav.imprensa">Imprensa</a>
+      <a href="#perguntas" data-t="nav.perguntas">Perguntas</a>
+      <a href="#contato" data-t="nav.contato">Contato</a>
+    </nav>
+  </div>
+</footer>
+
+<div class="lightbox" id="lightbox" hidden role="dialog" aria-modal="true" aria-label="Imagem ampliada">
+  <figure>
+    <img id="lbImg" src="img/pt_jardim.webp" alt="">
+    <figcaption>
+      <span id="lbCap"></span>
+      <span class="ctl">
+        <button type="button" id="lbPrev" aria-label="Imagem anterior">‹</button>
+        <button type="button" id="lbNext" aria-label="Próxima imagem">›</button>
+        <button type="button" id="lbClose" data-t="lb.close">Fechar</button>
+      </span>
+    </figcaption>
+  </figure>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* =====================================================================
+     1. CONFIGURAÇÃO: o único lugar para editar quando algo mudar.
+     ---------------------------------------------------------------------
+     - steam: a página da loja. Preenchida, o botão "Lista de desejos" vira a ação principal.
+     - email / formEndpoint: com um deles, a página de contato ganha o formulário.
+       formEndpoint é um serviço de formulários (Formspree, Getform...) e só funciona no site hospedado.
+     - redes: só aparecem as que estiverem preenchidas.
+     - analytics: com o token preenchido, o site passa a contar visitas, páginas e de onde o visitante veio.
+     ===================================================================== */
+  var CONFIG = {
+    steam: '',
+    email: '',
+    formEndpoint: '',
+    social: { discord: '', youtube: '', tiktok: '', instagram: '', x: '', bluesky: '' },
+    // métricas gratuitas e sem cookies: o "token" do Cloudflare Web Analytics (só funciona no site hospedado)
+    analytics: { cloudflareToken: '' }
+  };
+
+  /* =====================================================================
+     2. CONTEÚDO: dados com nome, nada de posição em lista.
+     ===================================================================== */
+  var SITE_NAME = 'Raid to the Dracula Castle';
+  var BOSS_SHADOWS = [   // silhuetas, na ordem em que aparecem no castelo
+    { file: 'sil_1', scale: 3 }, { file: 'sil_2', scale: 3 }, { file: 'sil_3', scale: 3 },
+    { file: 'sil_4', scale: 3 }, { file: 'sil_6', scale: 2 }, { file: 'sil_7', scale: 3 }
+  ];
+  var SHOTS = [   // só salas sem chefe
+    { file: 'portao', level: 1, name: { pt: 'Portão do Castelo', en: 'Castle Gate' } },
+    { file: 'jardim', level: 2, name: { pt: 'Jardim Abandonado', en: 'Abandoned Garden' } },
+    { file: 'cemiterio', level: 3, name: { pt: 'Cemitério', en: 'Graveyard' } },
+    { file: 'labirinto', level: 5, name: { pt: 'Labirinto de Cerca-viva', en: 'Hedge Maze' } },
+    { file: 'cantina', level: 5, name: { pt: 'Cantina do Lobisomem', en: "Werewolf's Cantina" } },
+    { file: 'salao', level: 24, name: { pt: 'Salão de Dança', en: 'Ballroom' } },
+    { file: 'torre', level: 42, name: { pt: 'Torre do Relógio', en: 'Clock Tower' } },
+    { file: 'espelhos', level: 52, name: { pt: 'Galeria dos Espelhos', en: 'Hall of Mirrors' } },
+    { file: 'confeitaria', level: 63, name: { pt: 'Confeitaria Sombria', en: 'Spooky Sweet Shop' } }
+  ];
+  var TOTAL_LEVELS = 67;
+  var FAQ = [
+    { q: { pt: 'Quando o jogo sai?', en: 'When does the game come out?' },
+      a: { pt: 'Ainda não tem data. Assim que a página da Steam abrir, o link aparece aqui; coloque na lista de desejos para ser avisado no lançamento.', en: "There's no date yet. As soon as the Steam page opens, the link shows up here; wishlist it to be notified at launch." } },
+    { q: { pt: 'Quantos chefes são?', en: 'How many bosses are there?' },
+      a: { pt: 'Mais de um. Menos do que o Drácula gostaria.', en: 'More than one. Fewer than Dracula would like.' } },
+    { q: { pt: 'O que tem na sala 67?', en: "What's in room 67?" }, a: { pt: 'Boa pergunta.', en: 'Good question.' } },
+    { q: { pt: 'Quanto vai custar?', en: 'How much will it cost?' },
+      a: { pt: 'O preço ainda está sendo definido. Vai ser um jogo pago, com tudo incluído: sem compras dentro do jogo.', en: "The price is still being decided. It's a paid game with everything included: no in-game purchases." } },
+    { q: { pt: 'Funciona no Steam Deck?', en: 'Does it run on the Steam Deck?' },
+      a: { pt: 'Sim. O jogo foi pensado para controle, com menus navegáveis pelo controle e textos legíveis na tela do Deck.', en: 'Yes. The game was built for controllers, with controller-friendly menus and text that reads well on the Deck screen.' } },
+    { q: { pt: 'Vai ter versão para celular?', en: 'Will there be a mobile version?' },
+      a: { pt: 'Sim, com controles de toque, depois do lançamento no PC.', en: 'Yes, with touch controls, after the PC launch.' } },
+    { q: { pt: 'Em quais idiomas?', en: 'Which languages?' },
+      a: { pt: 'Português do Brasil e inglês, em todos os textos e falas.', en: 'Brazilian Portuguese and English, for all text and dialogue.' } },
+    { q: { pt: 'É difícil?', en: 'Is it hard?' },
+      a: { pt: 'É um jogo de ação com desafio de verdade, mas justo: o castelo sempre avisa antes de atacar. Quase sempre.', en: 'It is an action game with a real challenge, but a fair one: the castle always warns you before it strikes. Almost always.' } }
+  ];
+  var CONTACT_REASONS = [   // cada cartão escolhe o assunto do formulário (índice em fTypes)
+    { type: 0, title: { pt: 'Imprensa', en: 'Press' }, text: { pt: 'Chave antecipada para análise, imagens em alta resolução ou entrevista.', en: 'Early review key, high-resolution images or an interview.' } },
+    { type: 1, title: { pt: 'Criadores de conteúdo', en: 'Content creators' }, text: { pt: 'Vídeos, transmissões e prévias do jogo antes do lançamento.', en: 'Videos, streams and previews before launch.' } },
+    { type: 2, title: { pt: 'Parcerias', en: 'Partnerships' }, text: { pt: 'Eventos, festivais, publicadoras e colaborações.', en: 'Events, festivals, publishers and collaborations.' } },
+    { type: 3, title: { pt: 'Jogadores', en: 'Players' }, text: { pt: 'Conte o que achou ou mande uma pergunta sobre o jogo.', en: 'Tell us what you think or ask about the game.' } }
+  ];
+  var MSG_MAX = 4000;
+  var SOCIAL_NAMES = { discord: 'Discord', youtube: 'YouTube', tiktok: 'TikTok', instagram: 'Instagram', x: 'X', bluesky: 'Bluesky' };
+
+  /* =====================================================================
+     3. IDIOMA: português vem do próprio HTML (é o que buscadores e quem está sem JS veem);
+        inglês e textos gerados pelo script ficam nos dicionários abaixo.
+     ===================================================================== */
+  var EN = {
+    'menu': 'Menu', 'skip': 'Skip to content', 'brand': 'Raid to the Dracula Castle: home', 'nav.inicio': 'Home', 'nav.jogo': 'The game', 'nav.imagens': 'Screenshots', 'nav.imprensa': 'Press', 'nav.perguntas': 'FAQ', 'nav.contato': 'Contact',
+    'hero.eye': 'October 31 · midnight', 'hero.hook': 'Trick or treat? Dracula chose the treats.',
+    'hero.lede': "He took all the neighborhood's candy to his castle. Pumpkinboy has a pumpkin for a head, good aim and one whole night to get it all back.",
+    
+    'hero.alt': "Dracula's castle on top of the hill, with the graveyard path full of candy", 'hero.chip': 'Level 1/67 · Castle Gate',
+    'facts.salas': 'rooms in the castle', 'facts.alas': 'wings, each with its own music', 'facts.chefes': 'bosses waiting inside', 'facts.abob': 'pumpkin against the whole castle',
+    'alt.jardim': 'Pumpkinboy in the Abandoned Garden, with candy all over the floor', 'f1.hud': 'Aim, throw, pick up', 'f1.h': 'Candy is your ammo',
+    'f1.p': 'Every candy you throw comes out of your stash. Whatever misses lands on the floor, and someone will have to go back for it. Hit three in a row and the castle gives back a little of what it stole.',
+    'alt.labirinto': 'Pumpkinboy in the Hedge Maze, with traps flashing on the floor', 'f2.hud': 'The castle fights back', 'f2.h': 'Not every danger has teeth',
+    'f2.p': 'The floor flashes before it bites. Pay attention and you roll right over it; don\'t, and you go back to the start of the wing. And the sixth time, Dracula comes in person.',
+    'alt.cantina': "The Werewolf's Cantina, with Don Lobo behind the counter and three items for sale", 'f3.hud': "Werewolf's Cantina", 'f3.h': 'Every castle has a traitor',
+    'f3.p': "Halfway through each wing, a Mexican werewolf opens his cantina and sells, for candy, things Dracula doesn't want you to have. Why is he helping? He won't say. Not yet.",
+    'b.hud': 'Bosses', 'b.h': 'They are waiting', 'b.p': 'Each one fights differently and has its own music. Who are they? You find out when you open the door.', 'b.aria': 'Silhouettes of the six bosses in the game',
+    'plat.hud': 'Where to play', 'plat.h': 'Made for PC, ready for controllers',
+    'plat.pc': 'PC (Steam)', 'plat.pc.p': 'Windows, with cloud saves and achievements. Keyboard and mouse, with the keys you want.',
+    'plat.deck.p': 'Full controller support: one stick moves, the other aims and throws.',
+    'plat.lang': 'English and Portuguese', 'plat.lang.p': 'Text, dialogue and menus in both languages.',
+    'plat.mob': 'Mobile', 'plat.mob.p': 'With touch controls, after the PC launch.',
+    'alt.rua': 'The neighborhood street on Halloween night, before the candy was stolen', 'cta.hud': 'Steam', 'cta.h': 'The castle door opens at launch',
+    'g.hud': 'The story', 'g.h': 'A Halloween night without candy',
+    'g.p': "On Halloween night, Dracula swept through the neighborhood and took all the kids' candy. Nobody dared to go after him. Nobody except the boy with a pumpkin for a head.",
+    'how.hud': 'How to play', 'how.h': 'Three things to know before going in',
+    'how.1h': 'Throw candy', 'how.1p': 'Aim and throw. Candy that misses stays on the floor: pick it up before you need it.',
+    'how.2h': 'Roll', 'how.2p': 'Pumpkinboy tucks into his pumpkin and rolls: he gets faster and, for a moment, nothing can touch him.',
+    'how.3h': 'Talk', 'how.3p': "Not everyone in the castle is on Dracula's side. It's worth listening.",
+    'c.hud': 'Characters', 'c.h': 'The three sides of this night',
+    'c.pk': 'No sword, no magic. Just good aim, a stash of candy and a pumpkin that rolls.',
+    'c.lobo': 'Mexican werewolf, merchant and sworn enemy of Dracula. The reason for the feud? He changes the subject every time.',
+    'c.drac.h': 'Dracula', 'c.drac.alt': "Dracula's silhouette, with red eyes", 'c.drac': "He waits at the end of the castle, surrounded by candy. They say he hasn't been the same since that night.",
+    'i.hud': 'Screenshots', 'i.h': 'A tour of the castle', 'i.p': 'Captured from the current version, untouched. Click an image to see it bigger.',
+    'pr.hud': 'Press kit', 'pr.h': 'For anyone writing about the game',
+    'pr.k.title': 'Title', 'pr.k.dev': 'Developer', 'pr.v.dev': 'Blackhand Studio, independent studio (Brazil)', 'pr.k.date': 'Release', 'pr.v.date': 'Coming soon',
+    'pr.k.plat': 'Platforms', 'pr.v.plat': 'PC (Steam), with Steam Deck support. Mobile later.', 'pr.k.genre': 'Genre', 'pr.v.genre': 'Isometric pixel-art action with free aim',
+    'pr.k.players': 'Players', 'pr.v.players': '1', 'pr.k.lang': 'Languages', 'pr.v.lang': 'English and Brazilian Portuguese', 'pr.k.price': 'Price', 'pr.v.price': 'To be announced',
+    'pr.k.ctl': 'Controls', 'pr.v.ctl': 'Keyboard and mouse (remappable keys) or controller',
+    'pr.short.h': 'Short description', 'pr.short': "Dracula stole the kids' candy. As Pumpkinboy, raid his castle across 67 rooms of isometric pixel-art action, with candy instead of bullets.",
+    'pr.long.h': 'Long description',
+    'pr.long1': "Raid to the Dracula Castle is an isometric pixel-art action game. On Halloween night, Dracula takes the whole neighborhood's candy, and Pumpkinboy, a boy with a pumpkin for a head, raids the castle to get it back.",
+    'pr.long2': 'Candy is the ammo: players aim, throw and pick up whatever missed. There are seven wings, each with a checkpoint, traps and a cantina where a werewolf with his own reasons sells items that change how you play. Falling six times in the same wing has consequences.',
+    'pr.feat.h': 'Highlights', 'pr.f1': '67 rooms across seven wings, with no repeated maps', 'pr.f2': 'Bosses that each fight their own way',
+    'pr.f3': 'Original soundtrack, with a track for every wing and every boss', 'pr.f4': 'Full controller and Steam Deck support', 'pr.f5': '22 achievements and Steam cloud saves', 'pr.f6': 'English and Portuguese',
+    'pr.logo.h': 'Logos', 'pr.studio.h': 'About Blackhand Studio', 'pr.studio.alt': "Blackhand Studio's brand: a black-and-white hand styled like a VHS tape recording", 'pr.studio.p1': 'Blackhand Studio is an independent game studio from Brazil, and Raid to the Dracula Castle is its first title.', 'pr.studio.p2': 'The brand identity mimics a VHS tape recording: the dark hand that gives the studio its name, the REC sign and the timecode in the corner of the screen.', 'pr.blogo.dark': 'Blackhand Studio logo on a dark background', 'pr.blogo.light': 'Blackhand Studio logo on a light background', 'pr.blogo.c1': 'Blackhand Studio, on a dark background', 'pr.blogo.c2': 'Blackhand Studio, on a light background', 'pr.logo.dark': 'Dracula logo on a dark background', 'pr.logo.light': 'Dracula logo on a light background', 'pr.logo.c1': 'Raid to the Dracula Castle, on a dark background', 'pr.logo.c2': 'Raid to the Dracula Castle, on a light background',
+    'pr.more': 'Press and content creators can ask for an early key and more material on the <a href="#contato">contact</a> page. Screenshots are on the <a href="#imagens">screenshots</a> page.',
+    'q.hud': 'Frequently asked questions', 'q.h': 'Before you enter the castle',
+    'ct.hud': 'Contact', 'ct.h': 'Get in touch', 'ct.p': 'Pick a subject, write your message and Blackhand Studio will reply to the email you leave.',
+    'foot.made': 'Made in Brazil', 'foot.by': 'A game by', 'foot.nav': 'Footer', 'lb.close': 'Close'
+  };
+  var STR = {   // textos montados pelo script
+    pt: {
+      wish: 'Lista de desejos na Steam', soonSteam: 'Em breve na Steam', shots: 'Ver imagens', news: 'Acompanhar novidades',
+      ctaReady: 'Coloque o jogo na lista de desejos e seja avisado no dia em que a porta abrir. Para um jogo independente, cada lista de desejos conta muito.',
+      ctaSoon: 'A página da Steam abre em breve. Quando abrir, coloque o jogo na lista de desejos: para um jogo independente, isso conta muito.',
+      lvl: 'Nível', open: 'Ampliar', of: '{0} de {1}', prev: 'Imagem anterior', next: 'Próxima imagem', dialog: 'Imagem ampliada',
+      whoH: 'Sobre o que você quer falar?', formH: 'Mande sua mensagem', soonNote: 'Steam e redes sociais aparecem aqui assim que estiverem no ar.',
+      privacy: 'Seu e-mail é usado só para responder a esta mensagem.', chars: '{0} de {1} caracteres',
+      demoH: 'Formulário em fase de testes', demoP: 'Sua mensagem passou na verificação, mas ainda não foi enviada: o envio é ligado junto com a abertura da página da Steam.',
+      emptyH: 'Os canais abrem junto com a página da Steam', emptyP: 'Ainda não temos redes nem e-mail públicos. Assim que estiverem no ar, os links aparecem aqui.',
+      fName: 'Nome', fMail: 'Seu e-mail', fType: 'Assunto', fMsg: 'Mensagem', fSend: 'Enviar mensagem', fSending: 'Enviando…',
+      fTypes: ['Imprensa', 'Criador de conteúdo', 'Parceria', 'Opinião sobre o jogo', 'Outro'],
+      copiedH: 'Mensagem copiada', copiedP: 'Cole no seu e-mail e envie para:', copyMail: 'Copiar endereço', copiedMail: 'Endereço copiado',
+      sentOk: 'Mensagem enviada. Obrigado! Respondemos pelo e-mail que você deixou.',
+      sentErr: 'Não deu para enviar agora. Tente de novo em alguns minutos.'
+    },
+    en: {
+      wish: 'Wishlist on Steam', soonSteam: 'Coming soon to Steam', shots: 'See screenshots', news: 'Follow the news',
+      ctaReady: 'Add the game to your wishlist and get notified the day the door opens. For an indie game, every wishlist counts a lot.',
+      ctaSoon: 'The Steam page opens soon. When it does, add the game to your wishlist: for an indie game, it counts a lot.',
+      lvl: 'Level', open: 'Enlarge', of: '{0} of {1}', prev: 'Previous image', next: 'Next image', dialog: 'Enlarged image',
+      whoH: 'What would you like to talk about?', formH: 'Send your message', soonNote: 'Steam and social media links show up here as soon as they go live.',
+      privacy: 'Your email is only used to reply to this message.', chars: '{0} of {1} characters',
+      demoH: 'Form in testing', demoP: "Your message passed validation but hasn't been sent yet: sending goes live together with the Steam page.",
+      emptyH: 'Channels open together with the Steam page', emptyP: "We don't have public social accounts or email yet. As soon as they go live, the links show up here.",
+      fName: 'Name', fMail: 'Your email', fType: 'Subject', fMsg: 'Message', fSend: 'Send message', fSending: 'Sending…',
+      fTypes: ['Press', 'Content creator', 'Partnership', 'Feedback on the game', 'Other'],
+      copiedH: 'Message copied', copiedP: 'Paste it into your email and send it to:', copyMail: 'Copy address', copiedMail: 'Address copied',
+      sentOk: 'Message sent. Thank you! We will reply to the email you left.',
+      sentErr: "Couldn't send right now. Please try again in a few minutes."
+    }
+  };
+
+  /* =====================================================================
+     4. UTILITÁRIOS
+     ===================================================================== */
+  var $ = function (sel, root) { return (root || document).querySelector(sel); };
+  var $$ = function (sel, root) { return Array.prototype.slice.call((root || document).querySelectorAll(sel)); };
+  var esc = function (v) { return String(v).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
+  var fmt = function (s) { var args = arguments; return s.replace(/\{(\d)\}/g, function (_, i) { return args[+i + 1]; }); };
+
+  // preferências do visitante (o armazenamento pode não existir: aba anônima, pré-visualização)
+  var Prefs = {
+    get: function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+    set: function (k, v) { try { localStorage.setItem(k, v); } catch (e) { /* sem armazenamento: segue sem lembrar */ } }
+  };
+
+  // Observer: os componentes se inscrevem e reagem; ninguém chama ninguém diretamente
+  var Bus = {
+    handlers: {},
+    on: function (evt, fn) { (this.handlers[evt] = this.handlers[evt] || []).push(fn); },
+    emit: function (evt, data) { (this.handlers[evt] || []).forEach(function (fn) { fn(data); }); }
+  };
+
+  // pixel art sempre em múltiplo inteiro do tamanho original (data-scale na imagem ou num pai)
+  function pixelScale(root) {
+    $$('[data-scale] img, img[data-scale]', root).forEach(function (img) {
+      var host = img.hasAttribute('data-scale') ? img : img.closest('[data-scale]');
+      var apply = function () { img.style.width = img.naturalWidth * Number(host.getAttribute('data-scale')) + 'px'; };
+      if (img.complete && img.naturalWidth) apply(); else img.addEventListener('load', apply, { once: true });
+    });
+  }
+
+  /* =====================================================================
+     5. IDIOMA (estado + tradução da parte fixa)
+     ===================================================================== */
+  var I18n = (function () {
+    var lang = Prefs.get('raid-site-lang') || (/^pt/i.test(navigator.language || '') ? 'pt' : 'en');
+    if (lang !== 'pt' && lang !== 'en') lang = 'pt';
+    var ptHtml = {}, ptAttr = {};
+    $$('[data-t]').forEach(function (n) { if (!(n.dataset.t in ptHtml)) ptHtml[n.dataset.t] = n.innerHTML; });
+    $$('[data-t-alt]').forEach(function (n) { ptAttr['alt:' + n.dataset.tAlt] = n.getAttribute('alt'); });
+    $$('[data-t-aria]').forEach(function (n) { ptAttr['aria:' + n.dataset.tAria] = n.getAttribute('aria-label'); });
+
+    function staticText(key, kind) { return lang === 'pt' ? (kind ? ptAttr[kind + ':' + key] : ptHtml[key]) : EN[key]; }
+    function applyStatic() {
+      document.documentElement.lang = lang === 'pt' ? 'pt-BR' : 'en';
+      $$('[data-t]').forEach(function (n) { var v = staticText(n.dataset.t); if (v != null) n.innerHTML = v; });
+      $$('[data-t-alt]').forEach(function (n) { var v = staticText(n.dataset.tAlt, 'alt'); if (v != null) n.alt = v; });
+      $$('[data-t-aria]').forEach(function (n) { var v = staticText(n.dataset.tAria, 'aria'); if (v != null) n.setAttribute('aria-label', v); });
+      $$('[data-shot]').forEach(function (n) { n.src = 'img/' + lang + '_' + n.dataset.shot + '.webp'; });
+      $$('[data-lang]').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.lang === lang)); });
+    }
+    return {
+      get lang() { return lang; },
+      t: function (key) { return STR[lang][key]; },                    // texto gerado pelo script
+      nav: function (key) { return staticText(key); },                 // texto fixo (ex.: nome da página no título)
+      pick: function (pair) { return pair[lang]; },                    // conteúdo com as duas línguas
+      set: function (next) { lang = next; Prefs.set('raid-site-lang', next); applyStatic(); Bus.emit('lang', lang); },
+      init: function () { applyStatic(); }
+    };
+  })();
+  var t = I18n.t, pick = I18n.pick;
+
+  /* =====================================================================
+     6. COMPONENTES: cada um sabe se desenhar e se inscreve no que precisa.
+     ===================================================================== */
+
+  // Chamada para ação: muda conforme o estado da loja (State)
+  var Cta = {
+    hasChannels: function () { return !!(CONFIG.email || CONFIG.formEndpoint || Object.keys(CONFIG.social).some(function (k) { return CONFIG.social[k]; })); },
+    wishlist: function () { return '<a class="btn main" href="' + esc(CONFIG.steam) + '" target="_blank" rel="noopener">' + esc(t('wish')) + '</a>'; },
+    soonBadge: function () { return '<span class="badge">' + esc(t('soonSteam')) + '</span>'; },
+    link: function (href, label, style) { return '<a class="btn ' + style + '" href="' + href + '">' + esc(label) + '</a>'; },
+    render: function () {
+      var ready = !!CONFIG.steam, news = this.hasChannels();
+      $$('[data-cta]').forEach(function (box) {
+        var where = box.dataset.cta, html;
+        if (where === 'hero') html = ready ? Cta.wishlist() + Cta.link('#imagens', t('shots'), 'ghost') : Cta.link('#imagens', t('shots'), 'main') + Cta.soonBadge();
+        else html = ready ? Cta.wishlist() + (news ? Cta.link('#contato', t('news'), 'ghost') : '') : (news ? Cta.link('#contato', t('news'), 'main') : Cta.link('#imagens', t('shots'), 'main')) + Cta.soonBadge();
+        box.innerHTML = html;
+      });
+      $$('[data-cta-text]').forEach(function (p) { p.textContent = t(ready ? 'ctaReady' : 'ctaSoon'); });
+    }
+  };
+
+  var Bosses = {
+    render: function () {
+      $('#bosses').innerHTML = BOSS_SHADOWS.map(function (b) { return '<img class="glow" src="img/' + b.file + '.png" alt="" data-scale="' + b.scale + '">'; }).join('');
+      pixelScale($('#bosses'));
+    }
+  };
+
+  var Gallery = {
+    render: function () {
+      $('#gallery').innerHTML = SHOTS.map(function (s, i) {
+        var name = pick(s.name);
+        return '<li><button type="button" data-i="' + i + '" aria-label="' + esc(t('open') + ': ' + name) + '">' +
+          '<img src="img/' + I18n.lang + '_' + s.file + '.webp" alt="" width="960" height="600" loading="lazy">' +
+          '<span class="cap"><b>' + esc(name) + '</b><span>' + t('lvl') + ' ' + s.level + '/' + TOTAL_LEVELS + '</span></span></button></li>';
+      }).join('');
+    }
+  };
+
+  var Faq = {
+    render: function () {
+      var openNow = $$('#faq details').map(function (d) { return d.open; });
+      $('#faq').innerHTML = FAQ.map(function (item, i) {
+        var open = openNow.length ? openNow[i] : i === 0;
+        return '<details' + (open ? ' open' : '') + '><summary>' + esc(pick(item.q)) + '</summary><p>' + esc(pick(item.a)) + '</p></details>';
+      }).join('');
+    }
+  };
+
+  // Contato: como a mensagem sai depende do que foi configurado (Strategy)
+  var ContactStrategies = {
+    endpoint: {
+      send: function (data, out, button) {
+        button.disabled = true; button.textContent = t('fSending');
+        fetch(CONFIG.formEndpoint, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(data) })
+          .then(function (r) { if (!r.ok) throw new Error(String(r.status)); out.innerHTML = '<div class="notice ok"><p>' + esc(t('sentOk')) + '</p></div>'; button.form.reset(); })
+          .catch(function () { out.innerHTML = '<div class="notice"><p>' + esc(t('sentErr')) + '</p></div>'; })
+          .then(function () { button.disabled = false; button.textContent = t('fSend'); });
+      }
+    },
+    email: {
+      send: function (data, out) {
+        var text = '[' + data.assunto + '] ' + data.nome + ' <' + data.email + '>\n\n' + data.mensagem;
+        var show = function () {
+          out.innerHTML = '<div class="notice ok"><b>' + esc(t('copiedH')) + '</b><p>' + esc(t('copiedP')) + '</p><code class="mail">' + esc(CONFIG.email) + '</code>' +
+            '<div><button class="btn ghost" type="button" data-copy-mail>' + esc(t('copyMail')) + '</button></div></div>';
+        };
+        copy(text).then(show, show);
+      }
+    }
+  };
+  // sem serviço configurado: valida tudo, mas avisa com clareza que nada foi enviado
+  ContactStrategies.demo = {
+    send: function (data, out) {
+      out.innerHTML = '<div class="notice"><b>' + esc(t('demoH')) + '</b><p>' + esc(t('demoP')) + '</p></div>';
+    }
+  };
+  function copy(text) {
+    try { return navigator.clipboard.writeText(text); } catch (e) { return Promise.reject(e); }
+  }
+
+  var Contact = {
+    strategy: function () { return CONFIG.formEndpoint ? ContactStrategies.endpoint : (CONFIG.email ? ContactStrategies.email : ContactStrategies.demo); },
+    channels: function () {
+      var list = [];
+      if (CONFIG.steam) list.push({ name: 'Steam', html: '<a href="' + esc(CONFIG.steam) + '" target="_blank" rel="noopener">' + esc(CONFIG.steam.replace(/^https?:\/\/(www\.)?/, '')) + '</a>' });
+      if (CONFIG.email) list.push({ name: 'E-mail', html: '<span class="mail">' + esc(CONFIG.email) + '</span>' });
+      Object.keys(SOCIAL_NAMES).forEach(function (k) {
+        var url = CONFIG.social[k];
+        if (url) list.push({ name: SOCIAL_NAMES[k], html: '<a href="' + esc(url) + '" target="_blank" rel="noopener">' + esc(url.replace(/^https?:\/\/(www\.)?/, '')) + '</a>' });
+      });
+      return list;
+    },
+    // o que a pessoa já digitou sobrevive à troca de idioma
+    snapshot: function () {
+      var f = $('#msgForm'); if (!f) return null;
+      return { nome: f.nome.value, email: f.email.value, assunto: f.assunto.selectedIndex, mensagem: f.mensagem.value };
+    },
+    restore: function (v) {
+      var f = $('#msgForm'); if (!f || !v) return;
+      f.nome.value = v.nome; f.email.value = v.email; f.assunto.selectedIndex = v.assunto; f.mensagem.value = v.mensagem;
+      this.syncCards();
+    },
+    syncCards: function () {
+      var f = $('#msgForm');
+      $$('.reason').forEach(function (c) { c.setAttribute('aria-pressed', String(Number(c.dataset.type) === f.assunto.selectedIndex)); });
+    },
+    reasonsHtml: function (channels) {
+      return '<div class="reasons"><h3>' + esc(t('whoH')) + '</h3>' +
+        CONTACT_REASONS.map(function (r) {
+          return '<button type="button" class="reason" data-type="' + r.type + '" aria-pressed="false"><b>' + esc(pick(r.title)) + '</b><span>' + esc(pick(r.text)) + '</span></button>';
+        }).join('') +
+        (channels.length ? '<ul class="channels">' + channels.map(function (c) { return '<li><b>' + esc(c.name) + '</b>' + c.html + '</li>'; }).join('') + '</ul>'
+                         : '<p class="soon-note">' + esc(t('soonNote')) + '</p>') + '</div>';
+    },
+    formHtml: function () {
+      return '<form class="msg form-card" id="msgForm" novalidate><h3>' + esc(t('formH')) + '</h3>' +
+        '<label for="fName">' + esc(t('fName')) + '<input id="fName" name="nome" autocomplete="name" required maxlength="120"></label>' +
+        '<label for="fMail">' + esc(t('fMail')) + '<input id="fMail" name="email" type="email" autocomplete="email" required maxlength="160"></label>' +
+        '<label for="fType">' + esc(t('fType')) + '<select id="fType" name="assunto">' + t('fTypes').map(function (o) { return '<option>' + esc(o) + '</option>'; }).join('') + '</select></label>' +
+        '<label for="fMsg">' + esc(t('fMsg')) + '<textarea id="fMsg" name="mensagem" required maxlength="' + MSG_MAX + '" aria-describedby="fCount"></textarea><span class="count" id="fCount">' + esc(fmt(t('chars'), 0, MSG_MAX)) + '</span></label>' +
+        '<label class="hp" aria-hidden="true">Não preencha<input name="_gotcha" tabindex="-1" autocomplete="off"></label>' +
+        '<div class="form-foot"><button class="btn main" type="submit">' + esc(t('fSend')) + '</button><small>' + esc(t('privacy')) + '</small></div>' +
+        '<div id="fOut" aria-live="polite"></div></form>';
+    },
+    render: function () {
+      var saved = this.snapshot(), channels = this.channels();
+      $('#contactBody').innerHTML = '<div class="contact">' + this.reasonsHtml(channels) + this.formHtml() + '</div>';
+      this.bindForm(this.strategy());
+      this.restore(saved);
+      this.updateCount();
+    },
+    updateCount: function () {
+      var f = $('#msgForm'); if (f) $('#fCount').textContent = fmt(t('chars'), f.mensagem.value.length, MSG_MAX);
+    },
+    bindForm: function (strategy) {
+      var self = this, form = $('#msgForm'), out = $('#fOut');
+      // cartão de assunto: escolhe o assunto no formulário e leva o foco para o primeiro campo vazio
+      $$('.reason').forEach(function (card) {
+        card.addEventListener('click', function () {
+          form.assunto.selectedIndex = Number(card.dataset.type);
+          self.syncCards();
+          var first = [form.nome, form.email, form.mensagem].filter(function (el) { return !el.value; })[0] || form.mensagem;
+          first.focus();
+        });
+      });
+      form.assunto.addEventListener('change', function () { self.syncCards(); });
+      form.mensagem.addEventListener('input', function () { self.updateCount(); });
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        if (!form.reportValidity()) return;
+        if (form._gotcha.value) return;   // robô preencheu o campo isca: ignora em silêncio
+        strategy.send({ nome: form.nome.value.trim(), email: form.email.value.trim(), assunto: form.assunto.value, mensagem: form.mensagem.value.trim(),
+          _subject: 'Site Raid to the Dracula Castle: ' + form.assunto.value }, out, form.querySelector('[type=submit]'));
+      });
+      out.addEventListener('click', function (e) {
+        var b = e.target.closest('[data-copy-mail]'); if (!b) return;
+        copy(CONFIG.email).then(function () { b.textContent = t('copiedMail'); }, function () { selectText($('.notice .mail', out)); });
+      });
+    }
+  };
+  function selectText(el) { if (!el) return; var r = document.createRange(); r.selectNodeContents(el); var s = getSelection(); s.removeAllRanges(); s.addRange(r); }
+
+  // Imagem ampliada: diálogo com foco preso, rolagem travada, setas, Esc e deslizar no celular
+  var Lightbox = {
+    el: $('#lightbox'), index: 0, opener: null, startX: null,
+    open: function (i, opener) {
+      this.opener = opener; this.show(i);
+      this.el.hidden = false; document.documentElement.classList.add('no-scroll');
+      $('#lbClose').focus();
+    },
+    close: function () {
+      this.el.hidden = true; document.documentElement.classList.remove('no-scroll');
+      if (this.opener) this.opener.focus();
+    },
+    show: function (i) {
+      this.index = (i + SHOTS.length) % SHOTS.length;
+      var s = SHOTS[this.index], name = pick(s.name);
+      $('#lbImg').src = 'img/' + I18n.lang + '_' + s.file + '.webp';
+      $('#lbImg').alt = name;
+      $('#lbCap').textContent = name + ' · ' + t('lvl') + ' ' + s.level + '/' + TOTAL_LEVELS + ' · ' + fmt(t('of'), this.index + 1, SHOTS.length);
+      new Image().src = 'img/' + I18n.lang + '_' + SHOTS[(this.index + 1) % SHOTS.length].file + '.webp';   // já carrega a próxima
+    },
+    labels: function () {
+      this.el.setAttribute('aria-label', t('dialog'));
+      $('#lbPrev').setAttribute('aria-label', t('prev'));
+      $('#lbNext').setAttribute('aria-label', t('next'));
+    },
+    bind: function () {
+      var self = this;
+      $('#gallery').addEventListener('click', function (e) { var b = e.target.closest('button[data-i]'); if (b) self.open(Number(b.dataset.i), b); });
+      $('#lbPrev').addEventListener('click', function () { self.show(self.index - 1); });
+      $('#lbNext').addEventListener('click', function () { self.show(self.index + 1); });
+      $('#lbClose').addEventListener('click', function () { self.close(); });
+      this.el.addEventListener('click', function (e) { if (e.target === self.el) self.close(); });
+      this.el.addEventListener('pointerdown', function (e) { self.startX = e.clientX; });
+      this.el.addEventListener('pointerup', function (e) {
+        if (self.startX == null) return;
+        var dx = e.clientX - self.startX; self.startX = null;
+        if (Math.abs(dx) > 50) self.show(self.index + (dx < 0 ? 1 : -1));
+      });
+      document.addEventListener('keydown', function (e) {
+        if (self.el.hidden) return;
+        if (e.key === 'Escape') self.close();
+        else if (e.key === 'ArrowLeft') self.show(self.index - 1);
+        else if (e.key === 'ArrowRight') self.show(self.index + 1);
+        else if (e.key === 'Tab') {   // o foco fica dentro do diálogo
+          var f = $$('button', self.el), first = f[0], last = f[f.length - 1];
+          if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+          else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+        }
+      });
+    }
+  };
+
+  // Menu do celular: abre, fecha no Esc, num toque fora ou ao escolher uma página
+  var MobileMenu = {
+    nav: $('#nav'), button: $('#menuBtn'),
+    set: function (open) { this.nav.classList.toggle('open', open); this.button.setAttribute('aria-expanded', String(open)); },
+    bind: function () {
+      var self = this;
+      this.button.addEventListener('click', function () { self.set(!self.nav.classList.contains('open')); });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && self.nav.classList.contains('open')) { self.set(false); self.button.focus(); } });
+      document.addEventListener('click', function (e) { if (self.nav.classList.contains('open') && !e.target.closest('.top')) self.set(false); });
+      Bus.on('route', function () { self.set(false); });
+    }
+  };
+
+  // Páginas pelo #endereço: troca a página, o título da aba e leva o foco ao título da página
+  var Router = {
+    pages: ['inicio', 'jogo', 'imagens', 'imprensa', 'perguntas', 'contato'],
+    current: function () { var h = location.hash.slice(1); return this.pages.indexOf(h) >= 0 ? h : 'inicio'; },
+    title: function (page) { return page === 'inicio' ? SITE_NAME : I18n.nav('nav.' + page) + ' · ' + SITE_NAME; },
+    render: function (moveFocus) {
+      var page = this.current();
+      $$('.page').forEach(function (p) { p.hidden = p.dataset.page !== page; });
+      $$('.nav a').forEach(function (a) { if (a.getAttribute('href') === '#' + page) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
+      document.title = this.title(page);
+      if (moveFocus) {
+        window.scrollTo(0, 0);
+        var heading = $('[data-page="' + page + '"] [data-focus]');
+        if (heading) heading.focus({ preventScroll: true });
+      }
+      Bus.emit('route', page);
+    },
+    bind: function () {
+      var self = this;
+      window.addEventListener('hashchange', function () { self.render(true); });
+      Bus.on('lang', function () { document.title = self.title(self.current()); });
+    }
+  };
+
+  $('[data-skip]').addEventListener('click', function (e) { e.preventDefault(); $('#main').focus(); });
+
+  // Métricas: o script do Cloudflare só entra se houver token (no site hospedado)
+  var Analytics = {
+    init: function () {
+      var token = CONFIG.analytics.cloudflareToken;
+      if (!token || !/^https?:$/.test(location.protocol)) return;
+      var s = document.createElement('script');
+      s.defer = true; s.src = 'https://static.cloudflareinsights.com/beacon.min.js';
+      s.setAttribute('data-cf-beacon', JSON.stringify({ token: token }));
+      document.head.appendChild(s);
+    }
+  };
+
+  /* =====================================================================
+     7. INÍCIO
+     ===================================================================== */
+  $$('[data-lang]').forEach(function (b) { b.addEventListener('click', function () { if (b.dataset.lang !== I18n.lang) I18n.set(b.dataset.lang); }); });
+  [Cta, Gallery, Faq, Contact].forEach(function (c) { Bus.on('lang', function () { c.render(); }); });
+  Bus.on('lang', function () { Lightbox.labels(); if (!Lightbox.el.hidden) Lightbox.show(Lightbox.index); });
+
+  I18n.init();
+  [Cta, Bosses, Gallery, Faq, Contact].forEach(function (c) { c.render(); });
+  Lightbox.labels(); Lightbox.bind();
+  MobileMenu.bind();
+  Router.bind(); Router.render(false);
+  pixelScale();
+  Analytics.init();
+})();
+</script>
