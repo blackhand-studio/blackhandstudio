@@ -1,21 +1,25 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Raid to the Dracula Castle</title>
-<meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="Doces ou travessuras? O Drácula escolheu os doces. Ação isométrica em pixel art da Blackhand Studio, em breve na Steam.">
 <meta name="theme-color" content="#120c1d">
 <link rel="icon" href="img/favicon.ico" sizes="any">
 <link rel="apple-touch-icon" href="img/blackhand-icone-180.png">
 <!-- Compartilhamento em redes sociais (Open Graph) e busca. O endereço é o domínio simulado do projeto: troque pelo definitivo ao publicar. -->
-<link rel="canonical" href="https://blackhandstudio.github.io/">
+<link rel="canonical" href="https://blackhand-studio.github.io/blackhandstudio/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Blackhand Studio">
 <meta property="og:title" content="Raid to the Dracula Castle">
 <meta property="og:description" content="Doces ou travessuras? O Drácula escolheu os doces. Ação isométrica em pixel art, em breve na Steam.">
-<meta property="og:url" content="https://blackhandstudio.github.io/">
-<meta property="og:image" content="https://blackhandstudio.github.io/img/og.png">
+<meta property="og:url" content="https://blackhand-studio.github.io/blackhandstudio/">
+<meta property="og:image" content="https://blackhand-studio.github.io/blackhandstudio/img/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"VideoGame","name":"Raid to the Dracula Castle","description":"Ação isométrica em pixel art: Pumpkinboy invade o castelo do Drácula para recuperar os doces das crianças.","genre":["Ação","Pixel art"],"gamePlatform":"PC","inLanguage":["pt-BR","en"],"url":"https://blackhandstudio.github.io/","image":"https://blackhandstudio.github.io/img/og.png","publisher":{"@type":"Organization","name":"Blackhand Studio","logo":"https://blackhandstudio.github.io/img/blackhand-icone-180.png"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"VideoGame","name":"Raid to the Dracula Castle","description":"Ação isométrica em pixel art: Pumpkinboy invade o castelo do Drácula para recuperar os doces das crianças.","genre":["Ação","Pixel art"],"gamePlatform":"PC","inLanguage":["pt-BR","en"],"url":"https://blackhand-studio.github.io/blackhandstudio/","image":"https://blackhand-studio.github.io/blackhandstudio/img/og.png","publisher":{"@type":"Organization","name":"Blackhand Studio","logo":"https://blackhand-studio.github.io/blackhandstudio/img/blackhand-icone-180.png"}}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;600;700&family=Figtree:wght@400;500;700&display=swap">
@@ -319,6 +323,8 @@ form.msg .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overf
 .logos .box img.brand { width: min(100%, 376px); height: auto; }
 @media (max-width: 520px) { .studio-card { grid-template-columns: minmax(0, 1fr); } .studio-card img { max-width: 240px; } }
 </style>
+</head>
+<body>
 
 <a class="skip" href="#main" data-skip data-t="skip">Pular para o conteúdo</a>
 <header class="top">
@@ -665,15 +671,15 @@ form.msg .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overf
      - email / formEndpoint: com um deles, a página de contato ganha o formulário.
        formEndpoint é um serviço de formulários (Formspree, Getform...) e só funciona no site hospedado.
      - redes: só aparecem as que estiverem preenchidas.
-     - analytics: com o token preenchido, o site passa a contar visitas, páginas e de onde o visitante veio.
+     - analytics: com o código do GoatCounter preenchido, o site passa a contar visitas, páginas e de onde o visitante veio.
      ===================================================================== */
   var CONFIG = {
     steam: '',
     email: '',
-    formEndpoint: '',
+    formEndpoint: 'https://formspree.io/f/xljbzanl',
     social: { discord: '', youtube: '', tiktok: '', instagram: '', x: '', bluesky: '' },
-    // métricas gratuitas e sem cookies: o "token" do Cloudflare Web Analytics (só funciona no site hospedado)
-    analytics: { cloudflareToken: '' }
+    // métricas gratuitas e sem cookies: o código do GoatCounter, a parte antes de .goatcounter.com (só funciona no site hospedado)
+    analytics: { goatcounter: 'blackhandstudio' }
   };
 
   /* =====================================================================
@@ -1123,15 +1129,24 @@ form.msg .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overf
 
   $('[data-skip]').addEventListener('click', function (e) { e.preventDefault(); $('#main').focus(); });
 
-  // Métricas: o script do Cloudflare só entra se houver token (no site hospedado)
+  // Métricas: o GoatCounter só entra se houver código (no site hospedado).
+  // O site navega por #página, então cada troca de página é contada à parte.
   var Analytics = {
+    path: function () { return location.pathname + (location.hash || '#inicio'); },
+    count: function () {
+      var gc = window.goatcounter;
+      if (gc && gc.count) gc.count({ path: Analytics.path(), title: document.title });
+    },
     init: function () {
-      var token = CONFIG.analytics.cloudflareToken;
-      if (!token || !/^https?:$/.test(location.protocol)) return;
+      var code = CONFIG.analytics.goatcounter;
+      if (!code || !/^https?:$/.test(location.protocol)) return;
+      window.goatcounter = { no_onload: true };
       var s = document.createElement('script');
-      s.defer = true; s.src = 'https://static.cloudflareinsights.com/beacon.min.js';
-      s.setAttribute('data-cf-beacon', JSON.stringify({ token: token }));
+      s.async = true; s.src = 'https://gc.zgo.at/count.js';
+      s.setAttribute('data-goatcounter', 'https://' + code + '.goatcounter.com/count');
+      s.addEventListener('load', Analytics.count, { once: true });
       document.head.appendChild(s);
+      window.addEventListener('hashchange', function () { setTimeout(Analytics.count, 0); });
     }
   };
 
@@ -1151,3 +1166,5 @@ form.msg .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overf
   Analytics.init();
 })();
 </script>
+</body>
+</html>
